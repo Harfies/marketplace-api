@@ -2,6 +2,18 @@ const mongoose = require("mongoose");
 const Order = require("../models/order");
 const Product = require("../models/product");
 const generateOrderNumber = require("../utils/generateOrderNumber");
+const User = require("../models/user");
+const sendEmail = require("../utils/sendEmail");
+const { orderCreatedTemplate } = require("../templates/orderCreatedTemplate");
+const {
+  orderProcessingTemplate,
+} = require("../templates/orderProcessingTemplate");
+
+const { orderShippedTemplate } = require("../templates/orderShippedTemplate");
+
+const {
+  orderDeliveredTemplate,
+} = require("../templates/orderDeliveredTemplate");
 
 exports.createOrder = async (req, res) => {
   const session = await mongoose.startSession();
@@ -43,6 +55,7 @@ exports.createOrder = async (req, res) => {
     }
 
     const orderNumber = await generateOrderNumber(session);
+
     const order = await Order.create(
       [
         {
@@ -51,7 +64,6 @@ exports.createOrder = async (req, res) => {
           items: orderItems,
           totalAmount,
           shippingAddress,
-
           statusHistory: [
             {
               status: "pending",
@@ -61,6 +73,20 @@ exports.createOrder = async (req, res) => {
       ],
       { session },
     );
+
+    const buyer = await User.findById(req.user.id);
+
+    if (buyer?.email) {
+      await sendEmail({
+        to: buyer.email,
+        subject: "Order Created",
+        html: orderCreatedTemplate({
+          name: buyer.name || buyer.email,
+          orderNumber,
+          amount: totalAmount,
+        }),
+      });
+    }
 
     await session.commitTransaction();
 
@@ -80,35 +106,53 @@ exports.createOrder = async (req, res) => {
 
 exports.getMyOrders = async (req, res) => {
   try {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
+    const {
+      page = 1,
+      limit = 10,
+      paymentStatus,
+      orderStatus,
+      sort = "desc",
+    } = req.query;
 
-    const orders = await Order.find({
+    const query = {
       buyer: req.user.id,
-    })
-      .populate("items.product")
-      .sort("-createdAt")
+    };
+
+    if (paymentStatus) {
+      query.paymentStatus = paymentStatus;
+    }
+
+    if (orderStatus) {
+      query.orderStatus = orderStatus;
+    }
+
+    const orders = await Order.find(query)
+      .populate("items.product", "name price image")
+      .sort({
+        createdAt: sort === "asc" ? 1 : -1,
+      })
       .skip((page - 1) * limit)
-      .limit(limit);
+      .limit(Number(limit));
 
-    const total = await Order.countDocuments({
-      buyer: req.user.id,
-    });
+    const total = await Order.countDocuments(query);
 
     res.json({
+      success: true,
       total,
-      page,
+      page: Number(page),
       pages: Math.ceil(total / limit),
+      count: orders.length,
       data: orders,
     });
   } catch (err) {
     res.status(500).json({
+      success: false,
       message: err.message,
     });
   }
 };
 
-exports.getOrder = async (req, res) => {
+exports.getOrders = async (req, res) => {
   try {
     let order;
 
@@ -169,6 +213,41 @@ exports.updateOrderStatus = async (req, res) => {
 
     await order.save();
 
+    const buyer = await User.findById(order.buyer);
+
+    if (orderStatus === "processing") {
+      await sendEmail({
+        to: buyer.email,
+        subject: "Order Processing",
+        html: orderProcessingTemplate({
+          name: buyer.name || buyer.email,
+          orderNumber: order.orderNumber,
+        }),
+      });
+    }
+
+    if (orderStatus === "shipped") {
+      await sendEmail({
+        to: buyer.email,
+        subject: "Order Shipped",
+        html: orderShippedTemplate({
+          name: buyer.name || buyer.email,
+          orderNumber: order.orderNumber,
+        }),
+      });
+    }
+
+    if (orderStatus === "delivered") {
+      await sendEmail({
+        to: buyer.email,
+        subject: "Order Delivered",
+        html: orderDeliveredTemplate({
+          name: buyer.name || buyer.email,
+          orderNumber: order.orderNumber,
+        }),
+      });
+    }
+
     res.json(order);
   } catch (err) {
     res.status(500).json({
@@ -219,27 +298,46 @@ exports.cancelOrder = async (req, res) => {
 
 exports.getSellerOrders = async (req, res) => {
   try {
-    const orders = await Order.find()
-      .populate({
-        path: "items.product",
-        populate: {
-          path: "seller",
-        },
+    const {
+      page = 1,
+      limit = 10,
+      paymentStatus,
+      orderStatus,
+      sort = "desc",
+    } = req.query;
+
+    const query = {};
+
+    if (paymentStatus) {
+      query.paymentStatus = paymentStatus;
+    }
+
+    if (orderStatus) {
+      query.orderStatus = orderStatus;
+    }
+
+    const orders = await Order.find(query)
+      .populate("buyer", "name email")
+      .populate("items.product")
+      .sort({
+        createdAt: sort === "asc" ? 1 : -1,
       })
-      .populate("buyer", "name email");
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
 
-    const sellerOrders = orders.filter((order) =>
-      order.items.some(
-        (item) =>
-          item.product &&
-          item.product.seller &&
-          item.product.seller._id.toString() === req.user.id,
-      ),
-    );
+    const total = await Order.countDocuments(query);
 
-    res.json(sellerOrders);
+    res.json({
+      success: true,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / limit),
+      count: orders.length,
+      data: orders,
+    });
   } catch (err) {
     res.status(500).json({
+      success: false,
       message: err.message,
     });
   }

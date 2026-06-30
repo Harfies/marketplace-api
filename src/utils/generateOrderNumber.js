@@ -1,12 +1,12 @@
 const Counter = require("../models/counter");
 
-const generateOrderNumber = async (session) => {
+const generateOrderNumber = async () => {
   const counter = await Counter.findOneAndUpdate(
     { _id: "orderNumber" },
-    { $inc: { seq: 1 } },
+    { $inc: { sequenceValue: 1 } },
     {
       upsert: true,
-      returnDocument: "after",
+      new: true,
     },
   );
 

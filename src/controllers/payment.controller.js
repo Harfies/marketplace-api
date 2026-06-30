@@ -5,6 +5,11 @@ const Payment = require("../models/payment");
 const Product = require("../models/product");
 const User = require("../models/user");
 const crypto = require("crypto");
+const sendEmail = require("../utils/sendEmail");
+const orderEmailTemplate = require("../utils/orderEmailTemplate");
+const {
+  paymentSuccessTemplate,
+} = require("../templates/paymentSuccessTemplate");
 
 exports.initializePayment = async (req, res) => {
   try {
@@ -132,6 +137,18 @@ exports.verifyPayment = async (req, res) => {
     // Update order payment status
     order.paymentStatus = "paid";
 
+    const buyer = await User.findById(order.buyer);
+
+    await sendEmail({
+      to: buyer.email,
+      subject: "Payment Successful",
+      html: paymentSuccessTemplate({
+        name: buyer.name || buyer.email,
+        orderNumber: order.orderNumber,
+        amount: order.totalAmount,
+      }),
+    });
+
     // Payment received → move order to processing
     order.orderStatus = "processing";
 
@@ -151,6 +168,14 @@ exports.verifyPayment = async (req, res) => {
     }
 
     await session.commitTransaction();
+
+    const user = await User.findById(order.buyer);
+
+    await sendEmail({
+      to: user.email,
+      subject: "Order Confirmation",
+      html: orderEmailTemplate(order),
+    });
 
     res.json({
       message: "Payment verified successfully",
@@ -225,7 +250,21 @@ exports.paystackWebhook = async (req, res) => {
         });
       }
 
-      console.log("PAYMENT REFERENCE:", reference);
+      const buyer = await User.findById(order.buyer);
+
+      if (buyer?.email) {
+        await sendEmail({
+          to: buyer.email,
+          subject: "Payment Successful",
+          html: paymentSuccessTemplate({
+            name: buyer.name || buyer.email,
+            orderNumber: order.orderNumber,
+            amount: order.totalAmount,
+          }),
+        });
+      }
+
+      console.log(`Payment verified automatically: ${reference}`);
     }
 
     res.sendStatus(200);
