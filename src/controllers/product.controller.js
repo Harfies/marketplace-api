@@ -195,12 +195,12 @@ exports.getProduct = async (req, res) => {
     const cachedProduct = await redisClient.get(cacheKey);
 
     if (cachedProduct) {
-      console.log("✅ PRODUCT CACHE HIT");
+      console.log(" PRODUCT CACHE HIT");
 
       return res.status(200).json(JSON.parse(cachedProduct));
     }
 
-    console.log("❌ PRODUCT CACHE MISS");
+    console.log(" PRODUCT CACHE MISS");
 
     // Get product from MongoDB
     const product = await Product.findById(productId).populate(
