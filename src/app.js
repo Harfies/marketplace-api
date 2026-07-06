@@ -6,7 +6,6 @@ const productRoutes = require("./routes/product.routes");
 const authRoutes = require("./routes/auth.routes");
 const orderRoutes = require("./routes/order.routes");
 const paymentRoutes = require("./routes/payment.routes");
-const testRoutes = require("./routes/test.route");
 const adminRoutes = require("./routes/admin.routes");
 const limiter = require("./middleware/rateLimit.middleware");
 const mongoSanitize = require("express-mongo-sanitize");
@@ -34,7 +33,6 @@ app.use(hpp());
 app.use("/api/admin", adminRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/test", testRoutes);
 
 app.get("/", (req, res) => {
   res.send("Marketplace API Running");

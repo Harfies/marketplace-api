@@ -1,8 +1,6 @@
 # 🛒 Marketplace API
 
-A production-ready RESTful Marketplace API built with **Node.js**, **Express.js**, **MongoDB**, and **Redis Cloud**.
-
-The API enables users to register, authenticate, manage products, place orders, complete secure payments with Paystack, receive automated email notifications, and provides administrators with revenue analytics and order management.
+A production-ready e-commerce Marketplace REST API demonstrating modern backend engineering practices including JWT authentication, Redis caching, Paystack payment integration, MongoDB aggregation pipelines, transaction support, idempotent endpoints, email notifications, and interactive Swagger documentation.
 
 ## The project also includes **interactive Swagger/OpenAPI documentation**, allowing developers to explore and test every endpoint directly from the browser.
 
@@ -462,6 +460,38 @@ Swagger provides an interactive interface for exploring and testing all API endp
 
 ---
 
+## 📖 Swagger Documentation
+
+Interactive API documentation.
+
+### Swagger Register
+
+![Swagger Register](docs/images/register.png)
+
+### Login
+
+![Login](docs/images/login.png)
+
+### Products
+
+![Products](docs/images/get product.png)
+
+### Orders
+
+![Orders](docs/images/order created.png)
+
+### Payments
+
+![Payments](docs/images/initialize payment.png)
+
+### update order status
+
+![Admin](docs/images/update order status.png)
+
+### idempotency
+
+![idempotency](docs/images/xli.png)
+
 # 📈 Performance Optimizations
 
 Implemented
@@ -525,16 +555,11 @@ Implemented
 
 ---
 
-# 👨‍💻 Author
+## Author
 
 **Afeez Akinsola**
 
-Computer Science Graduate
+Backend Developer specializing in Node.js, Express.js, MongoDB, Redis, and REST API development.
 
-Backend Developer (Node.js)
-
-GitHub:
-https://github.com/Harfies
-
-Email:
-akinsolaafeez82@gmail.com
+- GitHub: https://github.com/Harfies
+- Email: akinsolaafeez82@gmail.com

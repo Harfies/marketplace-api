@@ -306,36 +306,159 @@ exports.getSellerOrders = async (req, res) => {
       sort = "desc",
     } = req.query;
 
-    const query = {};
+    const currentPage = Number(page);
+    const pageSize = Number(limit);
+
+    const matchStage = {};
 
     if (paymentStatus) {
-      query.paymentStatus = paymentStatus;
+      matchStage.paymentStatus = paymentStatus;
     }
 
     if (orderStatus) {
-      query.orderStatus = orderStatus;
+      matchStage.orderStatus = orderStatus;
     }
 
-    const orders = await Order.find(query)
-      .populate("buyer", "name email")
-      .populate("items.product")
-      .sort({
-        createdAt: sort === "asc" ? 1 : -1,
-      })
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
+    const result = await Order.aggregate([
+      // Filter by payment/order status
+      {
+        $match: matchStage,
+      },
 
-    const total = await Order.countDocuments(query);
+      // Split items array
+      {
+        $unwind: "$items",
+      },
 
-    res.json({
+      // Join Product
+      {
+        $lookup: {
+          from: "products",
+          localField: "items.product",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+
+      // Convert product array to object
+      {
+        $unwind: "$product",
+      },
+
+      // Keep only this seller's products
+      {
+        $match: {
+          "product.seller": new mongoose.Types.ObjectId(req.user.id),
+        },
+      },
+
+      // Join Buyer
+      {
+        $lookup: {
+          from: "users",
+          localField: "buyer",
+          foreignField: "_id",
+          as: "buyer",
+        },
+      },
+
+      {
+        $unwind: "$buyer",
+      },
+
+      // Rebuild each order
+      {
+        $group: {
+          _id: "$_id",
+
+          orderNumber: {
+            $first: "$orderNumber",
+          },
+
+          buyer: {
+            $first: {
+              _id: "$buyer._id",
+              name: "$buyer.name",
+              email: "$buyer.email",
+            },
+          },
+
+          totalAmount: {
+            $first: "$totalAmount",
+          },
+
+          paymentStatus: {
+            $first: "$paymentStatus",
+          },
+
+          orderStatus: {
+            $first: "$orderStatus",
+          },
+
+          shippingAddress: {
+            $first: "$shippingAddress",
+          },
+
+          createdAt: {
+            $first: "$createdAt",
+          },
+
+          items: {
+            $push: {
+              quantity: "$items.quantity",
+              price: "$items.price",
+              product: {
+                _id: "$product._id",
+                name: "$product.name",
+                images: "$product.images",
+                seller: "$product.seller",
+              },
+            },
+          },
+        },
+      },
+
+      // Sort
+      {
+        $sort: {
+          createdAt: sort === "asc" ? 1 : -1,
+        },
+      },
+
+      // Pagination + Total Count
+      {
+        $facet: {
+          metadata: [
+            {
+              $count: "total",
+            },
+          ],
+
+          data: [
+            {
+              $skip: (currentPage - 1) * pageSize,
+            },
+            {
+              $limit: pageSize,
+            },
+          ],
+        },
+      },
+    ]);
+
+    const total = result[0].metadata.length ? result[0].metadata[0].total : 0;
+
+    res.status(200).json({
       success: true,
       total,
-      page: Number(page),
-      pages: Math.ceil(total / limit),
-      count: orders.length,
-      data: orders,
+      page: currentPage,
+      pages: Math.ceil(total / pageSize),
+      count: result[0].data.length,
+      data: result[0].data,
     });
   } catch (err) {
+    console.error(err);
+
     res.status(500).json({
       success: false,
       message: err.message,
@@ -369,42 +492,6 @@ exports.getSellerAnalytics = async (req, res) => {
     res.json({
       totalOrders: sellerOrders.length,
       revenue,
-    });
-  } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
-  }
-};
-
-exports.adminAnalytics = async (req, res) => {
-  try {
-    const totalOrders = await Order.countDocuments();
-
-    const pendingOrders = await Order.countDocuments({
-      orderStatus: "pending",
-    });
-
-    const revenue = await Order.aggregate([
-      {
-        $match: {
-          paymentStatus: "paid",
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          totalRevenue: {
-            $sum: "$totalAmount",
-          },
-        },
-      },
-    ]);
-
-    res.json({
-      totalOrders,
-      pendingOrders,
-      revenue: revenue[0]?.totalRevenue || 0,
     });
   } catch (err) {
     res.status(500).json({

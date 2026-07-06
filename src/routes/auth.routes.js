@@ -5,7 +5,7 @@ const { registerSchema, loginSchema } = require("../validators/auth.validator");
 
 /**
  * @swagger
- * /api/auth/signup:
+ * /api/auth/register:
  *   post:
  *     summary: Register a new user
  *     tags: [Authentication]

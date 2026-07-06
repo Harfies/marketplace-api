@@ -118,7 +118,7 @@ router.post(
  * @swagger
  * /api/products/{id}:
  *   patch:
- *     summary: Update Product
+ *     summary: Update product
  *     tags: [Products]
  *     security:
  *       - bearerAuth: []
@@ -128,14 +128,36 @@ router.post(
  *         required: true
  *         schema:
  *           type: string
+ *         description: Product ID
  *     requestBody:
+ *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: iPhone 15 Pro Max
+ *               description:
+ *                 type: string
+ *                 example: Updated product description
+ *               price:
+ *                 type: number
+ *                 example: 1200000
+ *               category:
+ *                 type: string
+ *                 example: Phones
+ *               stock:
+ *                 type: number
+ *                 example: 25
  *     responses:
  *       200:
- *         description: Product updated
+ *         description: Product updated successfully
+ *       403:
+ *         description: Unauthorized
+ *       404:
+ *         description: Product not found
  */
 router.put(
   "/:id",
