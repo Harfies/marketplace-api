@@ -460,6 +460,14 @@ Swagger provides an interactive interface for exploring and testing all API endp
 
 ---
 
+## Live Demo
+
+API:
+https://marketplace-api-xxad.onrender.com
+
+Swagger Documentation:
+https://marketplace-api-xxad.onrender.com/api-docs
+
 ## 📖 Swagger Documentation
 
 Interactive API documentation.
