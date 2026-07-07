@@ -482,19 +482,19 @@ Interactive API documentation.
 
 ### Products
 
-![Products](docs/images/get product.png)
+![Products](docs/images/get-product.png)
 
 ### Orders
 
-![Orders](docs/images/order created.png)
+![Orders](docs/images/order-created.png)
 
 ### Payments
 
-![Payments](docs/images/initialize payment.png)
+![Payments](docs/images/initialize-payment.png)
 
 ### update order status
 
-![Admin](docs/images/update order status.png)
+![Admin](docs/images/update-order-status.png)
 
 ### idempotency
 
