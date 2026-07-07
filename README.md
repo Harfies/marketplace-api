@@ -474,31 +474,31 @@ Interactive API documentation.
 
 ### Swagger Register
 
-![Swagger Register](docs/images/register.png)
+![Swagger Register](src/docs/images/register.png)
 
 ### Login
 
-![Login](docs/images/login.png)
+![Login](src/docs/images/login.png)
 
 ### Products
 
-![Products](docs/images/get-product.png)
+![Products](src/docs/images/get-product.png)
 
 ### Orders
 
-![Orders](docs/images/order-created.png)
+![Orders](src/docs/images/order-created.png)
 
 ### Payments
 
-![Payments](docs/images/initialize-payment.png)
+![Payments](src/docs/images/initialize-payment.png)
 
 ### update order status
 
-![Admin](docs/images/update-order-status.png)
+![Admin](src/docs/images/update-order-status.png)
 
 ### idempotency
 
-![idempotency](docs/images/xli.png)
+![idempotency](src/docs/images/xli.png)
 
 # 📈 Performance Optimizations
 
