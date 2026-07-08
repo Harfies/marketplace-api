@@ -11,12 +11,16 @@ const options = {
         "Production-ready Marketplace REST API built with Node.js, Express, MongoDB, Redis and Paystack.",
     },
 
-    servers: [
-      {
-        url: "http://localhost:3000",
-        description: "Local Development",
-      },
-    ],
+servers: [
+  {
+    url: "https://marketplace-api-xxad.onrender.com",
+    description: "Production Server",
+  },
+  {
+    url: "http://localhost:3000",
+    description: "Local Server",
+  },
+],
 
     tags: [
       {
