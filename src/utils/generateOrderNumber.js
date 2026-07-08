@@ -6,7 +6,7 @@ const generateOrderNumber = async () => {
     { $inc: { sequenceValue: 1 } },
     {
       upsert: true,
-      new: true,
+      returnDocument: "after",
     },
   );
 
