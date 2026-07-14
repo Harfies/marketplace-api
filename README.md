@@ -1,4 +1,4 @@
-# 🛒 Marketplace API
+# Marketplace API
 
 A production-ready **Marketplace REST API** built with **Node.js**,
 **Express.js**, **MongoDB**, **Redis Cloud**, **Paystack**, and
@@ -7,7 +7,7 @@ product management, order processing, payment integration, caching,
 idempotency, aggregation pipelines, email notifications, and interactive
 Swagger documentation.
 
-## 🌐 Live Demo
+## Live Demo
 
 - **API:** https://marketplace-api-xxad.onrender.com
 - **Swagger Docs:** https://marketplace-api-xxad.onrender.com/api-docs
@@ -24,9 +24,9 @@ Swagger documentation.
 
 ---
 
-# 🚀 Features
+# Features
 
-## 🔐 Authentication
+## Authentication
 
 - User Registration
 - User Login
@@ -34,14 +34,13 @@ Swagger documentation.
 - Role-based Authorization (Admin, Seller, Buyer)
 - Password Hashing (bcrypt)
 
-## 📦 Products
+## Products
 
 - Create Product
 - Update Product
 - Delete Product
 - Get Single Product
 - Get All Products
-- Multiple Image Uploads (Multer)
 
 ### Advanced Query Features
 
@@ -52,7 +51,7 @@ Swagger documentation.
 - Price Filtering
 - Stock Filtering
 
-## 🛒 Orders
+## Orders
 
 - Create Order
 - Get User Orders
@@ -63,14 +62,14 @@ Swagger documentation.
 - MongoDB Transactions
 - Automatic Order Number Generation
 
-## 💳 Payments
+## Payments
 
 - Paystack Payment Initialization
 - Payment Verification
 - Webhook Support
 - Automatic Order Updates
 
-## 📧 Email Notifications
+## Email Notifications
 
 - Order Created
 - Payment Successful
@@ -80,25 +79,25 @@ Swagger documentation.
 
 Powered by **Resend**.
 
-## ⚡ Redis
+## Redis
 
 - Product Cache
 - Cache Invalidation
 - Faster Response Times
 
-## 📊 Admin & Seller Analytics
+## Admin & Seller Analytics
 
 - Dashboard Statistics
 - Revenue Analytics
 - Seller Analytics
 - MongoDB Aggregation Pipelines
 
-## 🔁 Idempotency
+## Idempotency
 
 Order creation supports idempotency to prevent duplicate orders using
 the `Idempotency-Key` header.
 
-## 🔒 Security
+## Security
 
 - Helmet
 - HPP
@@ -109,7 +108,7 @@ the `Idempotency-Key` header.
 
 ---
 
-# 📚 API Documentation
+# API Documentation
 
 Interactive Swagger UI is available at:
 
@@ -117,7 +116,7 @@ https://marketplace-api-xxad.onrender.com/api-docs
 
 ---
 
-# 🛠 Tech Stack
+# Tech Stack
 
 - Node.js
 - Express.js
@@ -132,7 +131,7 @@ https://marketplace-api-xxad.onrender.com/api-docs
 
 ---
 
-# 📂 Project Structure
+# Project Structure
 
 ```text
 src/
@@ -150,7 +149,7 @@ src/
 
 ---
 
-# ⚙️ Environment Variables
+# Environment Variables
 
 ```env
 PORT=3000
@@ -174,7 +173,7 @@ REDIS_URL=your_redis_cloud_url
 
 ---
 
-# 📥 Installation
+# Installation
 
 ```bash
 git clone https://github.com/Harfies/marketplace-api.git
@@ -185,7 +184,7 @@ npm run dev
 
 ---
 
-# 🧪 Testing
+# Testing
 
 You can test the API using:
 
@@ -196,27 +195,25 @@ You can test the API using:
 
 ---
 
-# 🖼 Screenshots
-
-Replace these paths with your repository screenshots.
+# Screenshots
 
 ```md
-![Register](src/docs/images/register.png)
+![Register](C:\Users\HP\marketplace-api\src\docs\images\register.png)
 
-![Products](src/docs/images/get-product.png)
+![Products](C:\Users\HP\marketplace-api\src\docs\images\get-product.png)
 
-![Orders](src/docs/images/order-created.png)
+![Orders](C:\Users\HP\marketplace-api\src\docs\images\order-created.png)
 
-![Payments](src/docs/images/initialize-payment.png)
+![Payments](C:\Users\HP\marketplace-api\src\docs\images\initialize-payment.png)
 
-![Update Order Status](src/docs/images/update-order-status.png)
+![Update Order Status](C:\Users\HP\marketplace-api\src\docs\images\update-order-status.png)
 
-![Idempotency](src/docs/images/xli.png)
+![Idempotency](C:\Users\HP\marketplace-api\src\docs\images\xli.png)
 ```
 
 ---
 
-# 📈 Performance Optimizations
+# Performance Optimizations
 
 - Redis Caching
 - Pagination
@@ -226,7 +223,7 @@ Replace these paths with your repository screenshots.
 
 ---
 
-# ✅ Production Features
+# Production Features
 
 - JWT Authentication
 - Role Authorization
@@ -241,7 +238,7 @@ Replace these paths with your repository screenshots.
 
 ---
 
-# 🚀 Future Improvements
+# Future Improvements
 
 - Docker
 - CI/CD
@@ -254,7 +251,7 @@ Replace these paths with your repository screenshots.
 
 ---
 
-# 👨‍💻 Author
+# Author
 
 **Afeez Akinsola**
 
