@@ -1,573 +1,264 @@
 # 🛒 Marketplace API
 
-A production-ready e-commerce Marketplace REST API demonstrating modern backend engineering practices including JWT authentication, Redis caching, Paystack payment integration, MongoDB aggregation pipelines, transaction support, idempotent endpoints, email notifications, and interactive Swagger documentation.
+A production-ready **Marketplace REST API** built with **Node.js**,
+**Express.js**, **MongoDB**, **Redis Cloud**, **Paystack**, and
+**Resend**. It demonstrates authentication, role-based authorization,
+product management, order processing, payment integration, caching,
+idempotency, aggregation pipelines, email notifications, and interactive
+Swagger documentation.
 
-## The project also includes **interactive Swagger/OpenAPI documentation**, allowing developers to explore and test every endpoint directly from the browser.
+## 🌐 Live Demo
+
+- **API:** https://marketplace-api-xxad.onrender.com
+- **Swagger Docs:** https://marketplace-api-xxad.onrender.com/api-docs
+
+> **Email Notice**
+>
+> This project uses **Resend** for transactional emails. The deployed
+> demo currently uses Resend's free developer configuration without a
+> verified custom domain. As a result, email delivery is limited to
+> verified recipients associated with the Resend account. The email
+> integration is fully implemented and works correctly. To enable
+> delivery to any email address, simply verify a custom domain in Resend
+> and update the `FROM_EMAIL` environment variable.
+
+---
 
 # 🚀 Features
 
-# 📚 API Documentation
-
-This project includes interactive **Swagger/OpenAPI** documentation.
-
-After starting the server, visit:
-
-````text
-http://localhost:3000/api-docs
-
-```md
-## 📖 API Documentation
-
-- Swagger UI
-- OpenAPI 3.0
-- Interactive API Explorer
-- JWT Authorization Support
-- Request & Response Schemas
-
-## 👤 Authentication
+## 🔐 Authentication
 
 - User Registration
 - User Login
 - JWT Authentication
+- Role-based Authorization (Admin, Seller, Buyer)
 - Password Hashing (bcrypt)
-- Protected Routes
-- Role-based Authorization
-- Buyer & Seller Accounts
 
----
-
-## 📦 Product Management
+## 📦 Products
 
 - Create Product
-- Upload Multiple Images (Multer)
 - Update Product
 - Delete Product
 - Get Single Product
 - Get All Products
+- Multiple Image Uploads (Multer)
 
 ### Advanced Query Features
 
 - Search
+- Pagination
+- Sorting
 - Category Filtering
 - Price Filtering
 - Stock Filtering
-- Pagination
-- Sorting
 
-Example:
-
-````
-
-GET /api/products
-
-?page=1
-&limit=10
-&search=iphone
-&category=Phones
-&minPrice=50000
-&maxPrice=300000
-&inStock=true
-&sort=price_asc
-
-```
-
----
-
-## 🛍 Order Management
+## 🛒 Orders
 
 - Create Order
-- View User Orders
+- Get User Orders
+- Get Seller Orders
+- Cancel Order
 - Update Order Status
+- Status History
+- MongoDB Transactions
 - Automatic Order Number Generation
-- Transaction Support (MongoDB Session)
 
-Example Order Number
+## 💳 Payments
 
-```
-
-ORD-2026-000001
-
-```
-
----
-
-## 💳 Paystack Payment Integration
-
-Features include:
-
-- Initialize Payment
-- Verify Payment
+- Paystack Payment Initialization
+- Payment Verification
 - Webhook Support
-- Automatic Payment Confirmation
-- Automatic Order Status Update
-
-Payment Flow
-
-```
-
-Create Order
-
-↓
-
-Initialize Payment
-
-↓
-
-Customer Pays
-
-↓
-
-Paystack Webhook
-
-↓
-
-Payment Verified
-
-↓
-
-Order Updated
-
-↓
-
-Email Sent
-
-```
-
----
+- Automatic Order Updates
 
 ## 📧 Email Notifications
 
-Automatic emails are sent when:
+- Order Created
+- Payment Successful
+- Order Processing
+- Order Shipped
+- Order Delivered
 
-- ✅ Order Created
-- ✅ Payment Successful
-- 🚚 Order Processing
-- 🚛 Order Shipped
-- ✅ Order Delivered
+Powered by **Resend**.
 
-Email Templates are fully customizable.
+## ⚡ Redis
 
----
+- Product Cache
+- Cache Invalidation
+- Faster Response Times
 
-## 👨‍💼 Admin Features
-
-Admin endpoints include:
+## 📊 Admin & Seller Analytics
 
 - Dashboard Statistics
-- Total Orders
-- Total Revenue
-- Total Users
-- Total Products
+- Revenue Analytics
+- Seller Analytics
+- MongoDB Aggregation Pipelines
 
-Revenue endpoint.
+## 🔁 Idempotency
 
----
+Order creation supports idempotency to prevent duplicate orders using
+the `Idempotency-Key` header.
 
-# ⚡ Redis Caching
-
-Redis Cloud is used for caching product data.
-
-Cached endpoints include:
-
-- Get Products
-- Get Product By ID
-
-Cache is automatically cleared whenever:
-
-- Product Created
-- Product Updated
-- Product Deleted
-
-Benefits
-
-- Faster API responses
-- Reduced MongoDB queries
-- Better scalability
-
----
-
-# 🔒 Security
-
-Implemented security best practices.
-
-### Helmet
-
-Protects against common HTTP attacks.
-
-### JWT Authentication
-
-Secures private routes.
-
-### Rate Limiting
-
-Protects against abuse.
-
-Example
-
-```
-
-100 requests / 15 minutes
-
-```
-
-### MongoDB Sanitization
-
-Prevents NoSQL Injection.
-
-### HTTP Parameter Pollution (HPP)
-
-Blocks duplicate parameter attacks.
-
-### Password Hashing
-
-Uses bcrypt.
-
----
-
-# 🔁 Idempotency
-
-Critical endpoints support idempotency.
-
-Example
-
-```
-
-POST /api/orders
-
-```
-
-Headers
-
-```
-
-Idempotency-Key:
-order-001
-
-```
-
-Retrying the same request returns the same response instead of creating duplicate orders.
-
----
-
-# 📄 API Endpoints
-
-## Authentication
-
-| Method | Endpoint         |
-| ------ | ---------------- |
-| POST   | /api/auth/signup |
-| POST   | /api/auth/login  |
-
----
-
-## Products
-
-| Method | Endpoint          |
-| ------ | ----------------- |
-| POST   | /api/products     |
-| GET    | /api/products     |
-| GET    | /api/products/:id |
-| PATCH  | /api/products/:id |
-| DELETE | /api/products/:id |
-
----
-
-## Orders
-
-| Method | Endpoint               |
-| ------ | ---------------------- |
-| POST   | /api/orders            |
-| GET    | /api/orders            |
-| PATCH  | /api/orders/:id/status |
-
----
-
-## Payments
-
-| Method | Endpoint                        |
-| ------ | ------------------------------- |
-| POST   | /api/payments/initialize        |
-| GET    | /api/payments/verify/:reference |
-| POST   | /api/payments/webhook           |
-
----
-
-## Admin
-
-| Method | Endpoint             |
-| ------ | -------------------- |
-| GET    | /api/admin/dashboard |
-| GET    | /api/admin/revenue   |
-
----
-
-# 🛠 Tech Stack
-
-## Backend
-
-- Node.js
-- Express.js
-
-## Database
-
-- MongoDB
-- Mongoose
-
-## Cache
-
-- Redis Cloud
-
-## Authentication
-
-- JWT
-- bcrypt
-
-## Payments
-
-- Paystack
-
-## Email
-
-- Nodemailer
-
-## Uploads
-
-- Multer
-
-## Security
+## 🔒 Security
 
 - Helmet
 - HPP
 - express-rate-limit
 - express-mongo-sanitize
+- JWT
+- bcrypt
 
-## Logging
+---
 
-- Morgan
+# 📚 API Documentation
 
-## Documentation
+Interactive Swagger UI is available at:
 
-- Swagger UI Express
-- swagger-jsdoc
-- OpenAPI 3.0
+https://marketplace-api-xxad.onrender.com/api-docs
+
+---
+
+# 🛠 Tech Stack
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- Redis Cloud
+- JWT
+- Multer
+- Paystack
+- Resend
+- Swagger/OpenAPI
+
 ---
 
 # 📂 Project Structure
 
-```
-
-src
-│
-├── config
-│ ├── db.js
-│ ├── env.js
-│ ├── mail.js
-│
-├── controllers
-│
-├── middleware
-│
-├── models
-│
-├── routes
-│
-├── templates
-│
-├── utils
-│
-├── uploads
-│
+```text
+src/
+├── config/
+├── controllers/
+├── middleware/
+├── models/
+├── routes/
+├── templates/
+├── utils/
+├── uploads/
 ├── app.js
-│
 └── server.js
-
 ```
 
 ---
 
-# ⚙ Environment Variables
+# ⚙️ Environment Variables
 
-Create a `.env` file.
-
-```
-
+```env
 PORT=3000
 
-MONGO_URI=
+MONGO_URI=your_mongodb_connection_string
 
-JWT_SECRET=
+JWT_SECRET=your_jwt_secret
 
-EMAIL_USER=
+RESEND_API_KEY=your_resend_api_key
 
-EMAIL_PASS=
+FROM_EMAIL=onboarding@resend.dev
 
-PAYSTACK_SECRET_KEY=
+PAYSTACK_SECRET_KEY=your_paystack_secret_key
 
-PAYSTACK_PUBLIC_KEY=
+PAYSTACK_PUBLIC_KEY=your_paystack_public_key
 
-PAYSTACK_WEBHOOK_SECRET=
+PAYSTACK_WEBHOOK_SECRET=your_paystack_webhook_secret
 
-REDIS_URL=
-
-````
+REDIS_URL=your_redis_cloud_url
+```
 
 ---
 
 # 📥 Installation
 
-Clone repository
-
 ```bash
 git clone https://github.com/Harfies/marketplace-api.git
-````
-
-Move into project
-
-```bash
 cd marketplace-api
-```
-
-Install dependencies
-
-```bash
 npm install
-```
-
-Start development server
-
-```bash
 npm run dev
-```
-
-Production
-
-```bash
-npm start
 ```
 
 ---
 
 # 🧪 Testing
 
-The API can be tested using
+You can test the API using:
 
 - Swagger UI
 - Postman
 - Thunder Client
 - Insomnia
 
-Swagger provides an interactive interface for exploring and testing all API endpoints directly from the browser.
-
 ---
 
-## Live Demo
+# 🖼 Screenshots
 
-API:
-https://marketplace-api-xxad.onrender.com
+Replace these paths with your repository screenshots.
 
-Swagger Documentation:
-https://marketplace-api-xxad.onrender.com/api-docs
-
-## 📖 Swagger Documentation
-
-Interactive API documentation.
-
-### Swagger Register
-
-![Swagger Register](src/docs/images/register.png)
-
-### Login
-
-![Login](src/docs/images/login.png)
-
-### Products
+```md
+![Register](src/docs/images/register.png)
 
 ![Products](src/docs/images/get-product.png)
 
-### Orders
-
 ![Orders](src/docs/images/order-created.png)
-
-### Payments
 
 ![Payments](src/docs/images/initialize-payment.png)
 
-### update order status
+![Update Order Status](src/docs/images/update-order-status.png)
 
-![Admin](src/docs/images/update-order-status.png)
+![Idempotency](src/docs/images/xli.png)
+```
 
-### idempotency
-
-![idempotency](src/docs/images/xli.png)
+---
 
 # 📈 Performance Optimizations
 
-Implemented
-
-- Redis Cache
+- Redis Caching
 - Pagination
-- Filtering
-- Sorting
+- Aggregation Pipelines
 - MongoDB Indexes
-- Lean Queries (where applicable)
+- Lean Queries
 
 ---
 
-# 🔐 Production Features
+# ✅ Production Features
 
-✔ JWT Authentication
+- JWT Authentication
+- Role Authorization
+- Redis Cloud
+- Paystack
+- Resend Email
+- MongoDB Transactions
+- Idempotency
+- Swagger Documentation
+- Error Handling
+- Logging
 
-✔ Role Authorization
-
-✔ Email Notifications
-
-✔ Redis Caching
-
-✔ Paystack Payments
-
-✔ Payment Webhooks
-
-✔ Helmet
-
-✔ Rate Limiting
-
-✔ Mongo Sanitization
-
-✔ HPP Protection
-
-✔ Transaction Support
-
-✔ Idempotency
-
-✔ Logging
-
-✔ Error Handling
-
-✔ Swagger Documentation
-
-## ✔ OpenAPI 3.0 Specification
+---
 
 # 🚀 Future Improvements
 
-- Docker Support
-- Background Jobs (BullMQ)
-- CI/CD Pipeline
-- Unit Tests (Jest)
-- Integration Tests
-- API Versioning
+- Docker
+- CI/CD
+- BullMQ
+- Jest Tests
 - Refresh Tokens
-- Refresh Token Rotation
-- OAuth Login
-- Kubernetes Deployment
-- Monitoring (Prometheus + Grafana)
+- OAuth
+- Kubernetes
+- Prometheus & Grafana
 
 ---
 
-## Author
+# 👨‍💻 Author
 
 **Afeez Akinsola**
 
-Backend Developer specializing in Node.js, Express.js, MongoDB, Redis, and REST API development.
+Backend Developer (Node.js)
 
 - GitHub: https://github.com/Harfies
 - Email: akinsolaafeez82@gmail.com
