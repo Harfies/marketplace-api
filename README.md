@@ -195,21 +195,35 @@ You can test the API using:
 
 ---
 
-# Screenshots
+## Screenshots
 
-```md
-![Register](C:\Users\HP\marketplace-api\src\docs\images\register.png)
+### Register
 
-![Products](C:\Users\HP\marketplace-api\src\docs\images\get-product.png)
+![Register](src/docs/images/register.png)
 
-![Orders](C:\Users\HP\marketplace-api\src\docs\images\order-created.png)
+### Login
 
-![Payments](C:\Users\HP\marketplace-api\src\docs\images\initialize-payment.png)
+![Login](src/docs/images/login.png)
 
-![Update Order Status](C:\Users\HP\marketplace-api\src\docs\images\update-order-status.png)
+### Products
 
-![Idempotency](C:\Users\HP\marketplace-api\src\docs\images\xli.png)
-```
+![Products](src/docs/images/get-product.png)
+
+### Orders
+
+![Orders](src/docs/images/order-created.png)
+
+### Payments
+
+![Payments](src/docs/images/initialize-payment.png)
+
+### Update Order Status
+
+![Update Order Status](src/docs/images/update-order-status.png)
+
+### Idempotency
+
+![Idempotency](src/docs/images/xli.png)
 
 ---
 
