@@ -82,7 +82,6 @@ const orderSchema = new mongoose.Schema(
 );
 
 orderSchema.index({ buyer: 1 });
-//orderSchema.index({ orderNumber: 1 });
 orderSchema.index({ orderStatus: 1 });
 orderSchema.index({ paymentStatus: 1 });
 
