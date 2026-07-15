@@ -4,7 +4,7 @@ A production-ready **Marketplace REST API** built with **Node.js**,
 **Express.js**, **MongoDB**, **Redis Cloud**, **Paystack**, and
 **Resend**. It demonstrates authentication, role-based authorization,
 product management, order processing, payment integration, caching,
-idempotency, aggregation pipelines, email notifications, and interactive
+idempotency, logging aggregation pipelines, email notifications, and interactive
 Swagger documentation.
 
 ## Live Demo
