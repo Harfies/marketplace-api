@@ -1,11 +1,12 @@
 const router = require("express").Router();
+const logger = require("../logger/logger");
 
 const productController = require("../controllers/product.controller");
 const auth = require("../middleware/auth.middleware");
 const role = require("../middleware/role.middleware");
 const upload = require("../config/multer");
 
-// 🛒 Public routes
+//  Public routes
 /**
  * @swagger
  * /api/products:

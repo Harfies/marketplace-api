@@ -1,5 +1,6 @@
 const Product = require("../models/product");
 const redisClient = require("../config/redis");
+const logger = require("../logger/logger");
 
 exports.createProduct = async (req, res) => {
   try {
@@ -17,12 +18,12 @@ exports.createProduct = async (req, res) => {
       seller: req.user.id,
     });
 
-    // 🗑 Clear cached product lists
+    //  Clear cached product lists
     const keys = await redisClient.keys("products:*");
 
     if (keys.length > 0) {
       await redisClient.del(...keys);
-      console.log("🗑 Product cache cleared");
+      logger.info(" Product cache cleared");
     }
 
     res.status(201).json({
@@ -31,7 +32,7 @@ exports.createProduct = async (req, res) => {
       data: product,
     });
   } catch (err) {
-    console.error(err);
+    logger.error(err);
 
     res.status(500).json({
       success: false,
@@ -49,11 +50,11 @@ exports.getProducts = async (req, res) => {
     const cachedProducts = await redisClient.get(cacheKey);
 
     if (cachedProducts) {
-      console.log("✅ CACHE HIT");
+      logger.info(" CACHE HIT");
       return res.status(200).json(JSON.parse(cachedProducts));
     }
 
-    console.log("❌ CACHE MISS");
+    logger.info(" CACHE MISS");
 
     const {
       search,
@@ -68,7 +69,7 @@ exports.getProducts = async (req, res) => {
 
     const query = {};
 
-    // 🔎 Search by product name
+    //  Search by product name
     if (search) {
       query.$text = { $search: search };
     }
@@ -78,7 +79,7 @@ exports.getProducts = async (req, res) => {
       query.category = category;
     }
 
-    // 💰 Filter by price
+    //  Filter by price
     if (minPrice || maxPrice) {
       query.price = {};
 
@@ -91,7 +92,7 @@ exports.getProducts = async (req, res) => {
       }
     }
 
-    // 📦 Filter by stock
+    //  Filter by stock
     if (inStock === "true") {
       query.stock = { $gt: 0 };
     }
@@ -100,7 +101,7 @@ exports.getProducts = async (req, res) => {
       query.stock = 0;
     }
 
-    // 🔄 Sorting
+    //  Sorting
     let sortOption = { createdAt: -1 };
 
     switch (sort) {
@@ -170,11 +171,11 @@ exports.getProducts = async (req, res) => {
       EX: 300,
     });
 
-    console.log("📦 Products cached in Redis");
+    logger.info(" Products cached in Redis");
 
     return res.status(200).json(response);
   } catch (err) {
-    console.error(err);
+    logger.error(err);
 
     return res.status(500).json({
       success: false,
@@ -195,12 +196,12 @@ exports.getProduct = async (req, res) => {
     const cachedProduct = await redisClient.get(cacheKey);
 
     if (cachedProduct) {
-      console.log(" PRODUCT CACHE HIT");
+      logger.info(" PRODUCT CACHE HIT");
 
       return res.status(200).json(JSON.parse(cachedProduct));
     }
 
-    console.log(" PRODUCT CACHE MISS");
+    logger.info(" PRODUCT CACHE MISS");
 
     // Get product from MongoDB
     const product = await Product.findById(productId).populate(
@@ -226,11 +227,11 @@ exports.getProduct = async (req, res) => {
       EX: 300,
     });
 
-    console.log("📦 Product cached");
+    logger.info(" Product cached");
 
     return res.status(200).json(response);
   } catch (err) {
-    console.error(err);
+    logger.error(err);
 
     return res.status(500).json({
       success: false,
@@ -261,12 +262,12 @@ exports.updateProduct = async (req, res) => {
       new: true,
     });
 
-    // 🗑 Clear all cached product lists
+    //  Clear all cached product lists
     const keys = await redisClient.keys("products:*");
 
     if (keys.length > 0) {
       await redisClient.del(...keys);
-      console.log("🗑 Product cache cleared");
+      logger.info(" Product cache cleared");
     }
 
     res.status(200).json({
@@ -275,7 +276,7 @@ exports.updateProduct = async (req, res) => {
       data: updated,
     });
   } catch (err) {
-    console.error(err);
+    logger.error(err);
 
     res.status(500).json({
       success: false,
@@ -309,7 +310,7 @@ exports.deleteProduct = async (req, res) => {
 
     if (keys.length > 0) {
       await redisClient.del(...keys);
-      console.log("🗑 Product cache cleared");
+      logger.info("🗑 Product cache cleared");
     }
 
     res.status(200).json({
@@ -317,7 +318,7 @@ exports.deleteProduct = async (req, res) => {
       message: "Product deleted successfully",
     });
   } catch (err) {
-    console.error(err);
+    logger.error(err);
 
     res.status(500).json({
       success: false,

@@ -79,8 +79,8 @@ exports.verifyPayment = async (req, res) => {
 
     const paymentData = response.data.data;
 
-    console.log("PAYSTACK VERIFY RESPONSE:");
-    console.log(paymentData);
+    logger.info("PAYSTACK VERIFY RESPONSE:");
+    logger.info(paymentData);
 
     // Check Paystack payment status
     if (paymentData.status !== "success") {
@@ -185,7 +185,7 @@ exports.verifyPayment = async (req, res) => {
   } catch (err) {
     await session.abortTransaction();
 
-    console.error(err);
+    logger.error(err);
 
     res.status(500).json({
       message: err.message,
@@ -208,7 +208,7 @@ exports.paystackWebhook = async (req, res) => {
 
     const event = JSON.parse(req.body.toString());
 
-    console.log("PAYSTACK EVENT:", event.event);
+    logger.info("PAYSTACK EVENT:", event.event);
 
     if (event.event === "charge.success") {
       const reference = event.data.reference;
@@ -264,12 +264,12 @@ exports.paystackWebhook = async (req, res) => {
         });
       }
 
-      console.log(`Payment verified automatically: ${reference}`);
+      logger.info(`Payment verified automatically: ${reference}`);
     }
 
     res.sendStatus(200);
   } catch (err) {
-    console.error(err);
+    logger.error(err);
 
     res.sendStatus(500);
   }

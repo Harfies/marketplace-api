@@ -1,4 +1,5 @@
 const resend = require("../config/resend");
+const logger = require("../logger/logger");
 
 const sendEmail = async ({ to, subject, html }) => {
   try {
@@ -9,11 +10,11 @@ const sendEmail = async ({ to, subject, html }) => {
       html,
     });
 
-    console.log("Email sent:", response);
+    logger.info("Email sent:", response);
 
     return response;
   } catch (error) {
-    console.error("Resend Error:", error);
+    logger.error("Resend Error:", error);
 
     throw error;
   }

@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const { generateAccessToken, generateRefreshToken } = require("../utils/jwt");
+const logger = require("../logger/logger");
 
 exports.register = async (req, res) => {
   try {
@@ -36,6 +37,8 @@ exports.login = async (req, res) => {
 
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
+
+    logger.info(`${user.email} logged in`);
 
     res.json({ user, accessToken, refreshToken });
   } catch (err) {

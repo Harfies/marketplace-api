@@ -94,7 +94,7 @@ exports.createOrder = async (req, res) => {
   } catch (err) {
     await session.abortTransaction();
 
-    console.error(err);
+    logger.error(err);
 
     res.status(500).json({
       message: err.message,
@@ -185,7 +185,7 @@ exports.getOrders = async (req, res) => {
 
     res.json(order);
   } catch (err) {
-    console.error(err);
+    logger.error(err);
 
     res.status(500).json({
       message: err.message,
@@ -457,7 +457,7 @@ exports.getSellerOrders = async (req, res) => {
       data: result[0].data,
     });
   } catch (err) {
-    console.error(err);
+    logger.error(err);
 
     res.status(500).json({
       success: false,

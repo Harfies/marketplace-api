@@ -16,12 +16,12 @@ const idempotency = async (req, res, next) => {
     const cachedResponse = await redisClient.get(redisKey);
 
     if (cachedResponse) {
-      console.log(" IDEMPOTENCY HIT");
+      logger.info(" IDEMPOTENCY HIT");
 
       return res.status(200).json(JSON.parse(cachedResponse));
     }
 
-    console.log(" IDEMPOTENCY MISS");
+    logger.info(" IDEMPOTENCY MISS");
 
     // Save the original res.json
     const originalJson = res.json.bind(res);
@@ -33,7 +33,7 @@ const idempotency = async (req, res, next) => {
           EX: 60 * 60, // 1 hour
         });
 
-        console.log(" Response stored for idempotency");
+        logger.info(" Response stored for idempotency");
       }
 
       return originalJson(body);
@@ -41,7 +41,7 @@ const idempotency = async (req, res, next) => {
 
     next();
   } catch (err) {
-    console.error(err);
+    logger.error(err);
     next();
   }
 };
